@@ -162,19 +162,16 @@ def get_reroll_matrices(num_dice, from_npy=True):
     else:
         M_list = [d.generate_reroll_matrix() for d in all_outcomes(num_dice)]
     return M_list
+
+def random(num_dice):
+    eyelist = np.random.randint(1, 7, size=num_dice)
+    return Dice(eyelist=eyelist)
+    
+    
     
 if __name__ == '__main__':
-    d = Dice(cumlist=[1,0,0,0,0,0])
-    NUM_DICE_TOTAL = 2
-    
-    for num_dice in range(1, 6):
-        tic = time.perf_counter()    
-        M = get_reroll_matrices(num_dice)
-        toc = time.perf_counter()
-        elapsed = toc - tic
-        print(f"# of dice: {num_dice}. Elapsed time: {elapsed:.2g}s")
-
-    
+    d = random(5)
+    print(d)
     
     
     

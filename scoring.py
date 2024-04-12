@@ -6,8 +6,44 @@ Created on Sat Jun 25 13:38:36 2022
 """
 
 import numpy as np
+import standard_rules 
+import copy
 
+class Ruleset:
+    def __init__(self, name, num_dice, num_rolls, use_bonus, bonus_points=50, yatzy_points=50, block_yatzy=False):
+        self.categories = []
+        self.name = name
+        self.num_dice = num_dice
+        self.num_rolls = num_rolls
+        self.use_bonus = use_bonus
+        self.bonus_points = bonus_points
+        self.block_yatzy = block_yatzy
+        self.yatzy_points = yatzy_points
+        
 
+    def add_category(self, category):
+        self.categories.append(category)
+
+    def add_categories(self, categories):
+        import dice
+        outcome = dice.Dice(eyelist=[1,2,3,4,5])
+        # print(categories)
+        self.categories.extend(categories)
+
+    def num_categories(self):
+        return len(self.categories)
+    
+    def generate_yatzyblocked_categories(self):
+        categories = copy.deepcopy(self.categories)
+        categories[-1].score_fnc = lambda outcome: standard_rules.score_yatzy_blocked(outcome, self.num_dice, self.yatzy_points)
+        return categories
+
+class Category:
+    def __init__(self, name, score_fnc):
+        self.name = name
+        self.score_fnc = score_fnc
+    
+    
 def calculate_score(outcome, category):
     if category == 0:
         score = score_type(outcome, 1)
@@ -132,3 +168,11 @@ def score_n_of_a_kind(outcome, n):
             score = n*(i + 1)
             break
     return score
+
+
+
+if __name__ == "__main__":
+    cat = Category("1 par", lambda dice, category: score_pair(dice))
+    
+    
+    
